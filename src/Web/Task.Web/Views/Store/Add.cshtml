@@ -1,0 +1,19 @@
+﻿@model StoreViewModel
+
+@{
+    ViewData["Title"] = "Store | Create";
+}
+<div class="mx-auto mt-5" style="max-width: 540px;">
+
+<form asp-action="Add" enctype="multipart/form-data">
+    <div class="mb-3">
+        <label asp-for="Name" class="form-label">Name</label>
+        <input type="text" class="form-control" asp-for="Name" />
+    </div>
+    <div class="mb-3">
+        <label for="Image" class="form-label">Image</label>
+        <input type="file" class="form-control" name="image">
+    </div>
+    <button type="submit" class="btn btn-success">Add</button>
+</form>
+</div>

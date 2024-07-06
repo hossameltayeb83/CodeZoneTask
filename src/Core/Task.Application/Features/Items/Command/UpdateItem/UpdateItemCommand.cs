@@ -6,12 +6,12 @@ using System.Text;
 using System.Threading.Tasks;
 using Task.Application.Responses;
 
-namespace Task.Application.Features.Stores.Command.UpdateStore
+namespace Task.Application.Features.Items.Command.UpdateItem
 {
-    public class UpdateStoreCommand : IRequest<BaseResponse>
+    public class UpdateItemCommand: IRequest<BaseResponse>
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public string Image {  get; set; }
+        public string Image { get; set; }
     }
 }

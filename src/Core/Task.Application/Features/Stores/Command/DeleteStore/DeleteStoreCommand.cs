@@ -6,12 +6,10 @@ using System.Text;
 using System.Threading.Tasks;
 using Task.Application.Responses;
 
-namespace Task.Application.Features.Stores.Command.UpdateStore
+namespace Task.Application.Features.Stores.Command.DeleteStore
 {
-    public class UpdateStoreCommand : IRequest<BaseResponse>
+    public class DeleteStoreCommand : IRequest<BaseResponse>
     {
         public int Id { get; set; }
-        public string Name { get; set; }
-        public string Image {  get; set; }
     }
 }

@@ -11,7 +11,7 @@ using Task.Persistence.Data;
 namespace Task.Persistence.Migrations
 {
     [DbContext(typeof(TaskContext))]
-    [Migration("20240705024216_init")]
+    [Migration("20240706141306_init")]
     partial class init
     {
         /// <inheritdoc />

@@ -19,8 +19,4 @@
     <ProjectReference Include="..\..\Infrastructure\Task.Persistence\Task.Persistence.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="wwwroot\Images\Items\" />
-  </ItemGroup>
-
 </Project>
