@@ -9,7 +9,7 @@ using Task.Application.Contracts.Persistence;
 using Task.Application.Responses;
 using Task.Domain.Entities;
 
-namespace Task.Application.Features.Stores.Query
+namespace Task.Application.Features.Stores.Query.GetPaginatedStores
 {
     internal class GetPaginatedStoresQueryHandler : IRequestHandler<GetPaginatedStoresQuery, BaseResponse<PaginatedResponse<StoreDto>>>
     {
@@ -23,10 +23,10 @@ namespace Task.Application.Features.Stores.Query
         }
         public async Task<BaseResponse<PaginatedResponse<StoreDto>>> Handle(GetPaginatedStoresQuery request, CancellationToken cancellationToken)
         {
-            var response= new BaseResponse<PaginatedResponse<StoreDto>>();
+            var response = new BaseResponse<PaginatedResponse<StoreDto>>();
             var stores = await _storeRepository.GetPaginatedListAsync(request.Page, request.PageSize);
-            var storesDto= _mapper.Map<List<StoreDto>>(stores.Items);
-            response.Result = new PaginatedResponse<StoreDto>(storesDto,request.Page,request.PageSize,stores.Count);
+            var storesDto = _mapper.Map<List<StoreDto>>(stores.Items);
+            response.Result = new PaginatedResponse<StoreDto>(storesDto, request.Page, request.PageSize, stores.Count);
             return response;
         }
     }

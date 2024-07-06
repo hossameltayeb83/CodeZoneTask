@@ -1,5 +1,16 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model StoreViewModel
+
 @{
+    ViewData["Title"] = "Store | Edit";
 }
+<form asp-action="Edit">
+    <div class="mb-3">
+        <label asp-for="Name" class="form-label">Name</label>
+        <input type="text" class="form-control" asp-for="Name"/>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Image" class="form-label">Image</label>
+        <input type="image" class="form-control" asp-for="Image" >
+    </div>
+    <button type="submit" class="btn btn-primary">Edit</button>
+</form>

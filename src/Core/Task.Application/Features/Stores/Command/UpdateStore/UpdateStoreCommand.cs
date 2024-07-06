@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace Task.Application.Features.Stores.Command.UpdateStore
 {
-    internal class UpdateStoreCommand
+    public class UpdateStoreCommand
     {
+        public int Id { get; set; }
+        public string Name { get; set; }
     }
 }

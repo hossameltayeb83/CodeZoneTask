@@ -15,8 +15,12 @@
       <div class="card-body">
         <h5 class="card-title">@store.Name</h5>
         <div class="btn-group" role="group" aria-label="Basic mixed styles example">
-                        <button type="button" class="btn btn-warning"><a class="text-light" asp-action="edit" asp-route-id="@store.Id">Edit</a></button>
-                        <button type="button" class="btn btn-danger"><a class="text-light" asp-action="delete" asp-route-id="@store.Id">Delete</a></button>
+            <button type="button" class="btn btn-warning">
+                <a class="text-light text-decoration-none" asp-action="edit" asp-route-id="@store.Id">Edit</a>
+                </button>
+            <button type="button" class="btn btn-danger">
+                <a class="text-light text-decoration-none" asp-action="delete" asp-route-id="@store.Id">Delete</a>
+                </button>
             <button type="button" class="btn btn-primary"><a>Purchase</a></button>
         </div>
       </div>
