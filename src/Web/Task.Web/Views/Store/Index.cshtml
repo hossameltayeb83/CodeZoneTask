@@ -1,24 +1,61 @@
-﻿@model PaginatedViewModel<StoreViewModel>
-}
+﻿@model PaginatedViewModel<List<StoreViewModel>>
+
 @{
     ViewData["Title"] = "Stores";
 }
-<table>
-    <thead>
-        <tr>
-            <th>Id</th>
-            <th>Name</th>
-            <th>Image</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach(var store in Model.Items)
+
+@foreach(var store in Model.Items)
+{
+    <div class="card mb-3 mx-auto" style="max-width: 540px;">
+  <div class="row g-0">
+    <div class="col-md-4">
+      <img src="~/@store.Image" class="img-fluid rounded-start" alt="...">
+    </div>
+    <div class="col-md-8">
+      <div class="card-body">
+        <h5 class="card-title">@store.Name</h5>
+        <div class="btn-group" role="group" aria-label="Basic mixed styles example">
+                        <button type="button" class="btn btn-warning"><a class="text-light" asp-action="edit" asp-route-id="@store.Id">Edit</a></button>
+                        <button type="button" class="btn btn-danger"><a class="text-light" asp-action="delete" asp-route-id="@store.Id">Delete</a></button>
+            <button type="button" class="btn btn-primary"><a>Purchase</a></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+}
+<nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-center">
+        <li class="page-item @(Model.HasPreviousPage?"":"disabled")">
+            <a class="page-link" asp-action="" asp-route-page="@(Model.Page-1)" asp-route-pageSize="@(Model.PageSize)">Previous</a>
+        </li>
+        @for (int i=1;i<=Model.TotalPages;i++)
         {
-            <tr>
-                <td>@store.Id</td>
-                <td>@store.Name</td>
-                <td>@store.Image</td>
-            </tr>
+            <li class="page-item"><a class="page-link" asp-action="" asp-route-page="@i" asp-route-pageSize="@(Model.PageSize)">@i</a></li>
         }
-    </tbody>
-</table>
+        <li class="page-item @(Model.HasNextPage?"":"disabled") ">
+            <a class="page-link" asp-action="" asp-route-page="@(Model.Page+1)" asp-route-pageSize="@(Model.PageSize)">Next</a>
+        </li>
+@*         <li class="page-item">
+            <input class="page-link w-25 px-2" type="number" value="@Model.PageSize" id="perPage" />
+        </li> *@
+    </ul>
+</nav>
+@* @section Scripts{
+
+    <script>
+        $(document).ready(function () {
+            $('#perPage').change(function () {
+                console.log($(this).val());
+                let newPageSize = $(this).val();
+                $('.page-link').each(function () {
+                    let href = $(this).attr('href');
+                    let i = href.length - 1;
+                    while (isDigit(href[i])) { i--; }
+                    let newHref=href.slice()
+                    $(this).attr('href', href + `&pageSize=${newPageSize}`);
+                });
+            });
+        });
+    </script> *@
+}

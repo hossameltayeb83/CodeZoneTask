@@ -15,14 +15,21 @@ namespace Task.Web.Controllers
             _mediator = mediator;
             _mapper = mapper;
         }
-        public async Task<IActionResult> Index([FromQuery]GetPaginatedStoresQuery query)
+        public async Task<IActionResult> Index(int page=1,int pageSize=5)
         {
-            var response = await _mediator.Send(query);
+            var response = await _mediator.Send(new GetPaginatedStoresQuery { Page=page,PageSize=pageSize});
             if (response.Success)
             {
                 var result = response.Result;
                 var resultVm = _mapper.Map<List<StoreViewModel>>(result.Items);
-                var paginatedVm = _mapper.Map<PaginatedViewModel<StoreViewModel>>(result.Items);
+                var paginatedVm = new PaginatedViewModel<List<StoreViewModel>> { Items=resultVm,
+                    HasNextPage=result.HasNextPage,
+                    HasPreviousPage=result.HasPreviousPage,
+                    Page=result.Page,
+                    PageSize=result.PageSize,
+                    TotalCount=result.TotalCount,
+                    TotalPages=result.TotalPages
+                };
                 return View(paginatedVm);
             }
             return View();

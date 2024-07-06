@@ -21,7 +21,6 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\Images\Items\" />
-    <Folder Include="wwwroot\Images\Stores\" />
   </ItemGroup>
 
 </Project>
