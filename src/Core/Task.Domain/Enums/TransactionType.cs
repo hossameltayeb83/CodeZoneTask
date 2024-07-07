@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace Task.Domain.Enums
 {
-    internal class TransactionType
+    public enum TransactionType
     {
+        Purchase,
+        Sell
     }
 }

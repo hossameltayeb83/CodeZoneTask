@@ -3,7 +3,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Task.Application.Features.Items.Query.GetAllItems;
 using Task.Application.Features.Stores.Query.GetAllStores;
-using Task.Application.Features.Stores.Query.GetStoreItemBalance;
+using Task.Application.Features.StoreItems.Query.GetStoreItemBalance;
 using Task.Web.ViewModels;
 
 namespace Task.Web.Controllers
@@ -36,7 +36,7 @@ namespace Task.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                //var response= _mediator.Send(new UpdateStoreItem );
+                //var response= _mediator.Send(new UpdateStoreItemCommand { } );
                 return RedirectToAction("Purchase", new {storeId=purchaseViewModel.StoreId,itemId=purchaseViewModel.ItemId});
             }
             return View(purchaseViewModel);

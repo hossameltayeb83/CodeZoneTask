@@ -12,16 +12,24 @@ namespace Task.Application.Features.StoreItems.Query.GetStoreItemBalance
 {
     internal class GetStoreItemBalanceQueryHandler : IRequestHandler<GetStoreItemBalanceQuery, BaseResponse<int>>
     {
-        private readonly IStoreItemRepository _storeItemRepository;
+        private readonly IRepository<StoreItem> _storeItemRepository;
 
-        public GetStoreItemBalanceQueryHandler(IStoreItemRepository storeItemRepository)
+        public GetStoreItemBalanceQueryHandler(IRepository<StoreItem> storeItemRepository)
         {
             _storeItemRepository = storeItemRepository;
         }
         public async Task<BaseResponse<int>> Handle(GetStoreItemBalanceQuery request, CancellationToken cancellationToken)
         {
             var response = new BaseResponse<int>();
-            response.Result = await _storeItemRepository.GetStoreItemBalance(request.StoreId, request.ItemId);
+            var storeItem= await _storeItemRepository.GetByIdAsync(request.StoreId, request.ItemId);
+            if (storeItem!=null)
+            {
+                response.Result = storeItem.Quantity;
+            }
+            else
+            {
+                response.Result = 0;
+            }
             return response;
         }
     }

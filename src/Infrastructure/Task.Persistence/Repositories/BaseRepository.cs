@@ -33,9 +33,9 @@ namespace Task.Persistence.Repositories
             return await _context.Set<T>().ToListAsync();
         }
 
-        public async ValueTask<T?> GetByIdAsync(int id)
+        public async ValueTask<T?> GetByIdAsync(params int[] ids)
         {
-            return await _context.Set<T>().FindAsync(id);
+            return await _context.Set<T>().FindAsync(ids);
         }
 
         public async Task<(IReadOnlyList<T>,int)> GetPaginatedListAsync(int page, int pageSize)
