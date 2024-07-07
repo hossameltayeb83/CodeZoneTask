@@ -1,0 +1,78 @@
+﻿@model PurchaseViewModel
+@{
+    ViewData["Title"] = "Purchase";
+    SelectList stores = new SelectList(Model.Stores, "Id", "Name", Model.StoreId??0);
+    SelectList items = new SelectList(Model.Items, "Id", "Name", Model.ItemId??0);
+}
+<div class="mx-auto mt-5" style="max-width: 540px;">
+    <form asp-action="purchase">
+        <div class="mb-3">
+            <label asp-for="StoreId" class="form-label">Store</label>
+            <select asp-for="StoreId" asp-items="stores" id="stores" class="form-control">
+                <option value=""><span class="fw-light">Please Select a store:</span></option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label asp-for="ItemId" class="form-label">Item</label>
+            <select asp-for="ItemId" asp-items="items" id="items" class="form-control">
+                <option value=""><span class="fw-light">Please Select an item:</span></option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Quantity" class="form-label"></label>
+            <span asp-validation-for="Quantity" class="text-danger"></span>
+            <input type="number" id="quantity" disabled asp-for="Quantity" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label id="balanceLabel" for="balance" class="form-label">Current Balance</label>
+            <input type="number" disabled id="balance" class="form-control">
+        </div>
+        <button type="submit" class="btn btn-success">Purchase</button>
+    </form>
+</div>
+@section Scripts
+{
+    <partial name="_ValidationScriptsPartial.cshtml" />
+    <script>
+        $(document).ready(function () {
+            let balance;
+
+            function resetInputs() {
+                $('#balance').val('');
+                $('#balanceLabel').text('Current Balance');
+                $('#quantity').val('');
+                $('#quantity').prop('disabled', true);
+            }
+
+            function fetchBalance(){
+                resetInputs()
+                const itemId = $("#items").val();
+                const storeId = $("#stores").val();
+                if (itemId !== "" && storeId !== "") {
+                    $("#quantity").prop('disabled', false);
+                    $.get("https://localhost:7291/Order/Balance", {
+                        storeId: storeId,
+                        itemId: itemId
+                    }).done(function (data) {
+                        balance = +data;
+                        $("#balance").val(data);
+                    });
+                }
+            }
+
+            $('#items,#stores').change(fetchBalance);
+
+            $('#quantity').change(function () {
+                const quantity = +$(this).val();
+                if (quantity > 0) {
+                    $('#balanceLabel').text('Updated Balance');
+                    $('#balance').val(balance + quantity);
+                }
+                else{
+                    $('#balanceLabel').text('Current Balance');
+                    $('#balance').val(balance);
+                }
+            })
+        });
+    </script> 
+}

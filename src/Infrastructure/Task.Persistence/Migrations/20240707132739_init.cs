@@ -44,8 +44,8 @@ namespace Task.Persistence.Migrations
                 name: "StoreItems",
                 columns: table => new
                 {
-                    ItemId = table.Column<int>(type: "int", nullable: false),
                     StoreId = table.Column<int>(type: "int", nullable: false),
+                    ItemId = table.Column<int>(type: "int", nullable: false),
                     Quantity = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>

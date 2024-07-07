@@ -319,7 +319,7 @@ namespace Task.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Task.Domain.Entities.Store", "store")
+                    b.HasOne("Task.Domain.Entities.Store", "Store")
                         .WithMany()
                         .HasForeignKey("StoreId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -327,7 +327,7 @@ namespace Task.Persistence.Migrations
 
                     b.Navigation("Item");
 
-                    b.Navigation("store");
+                    b.Navigation("Store");
                 });
 #pragma warning restore 612, 618
         }

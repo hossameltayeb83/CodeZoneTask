@@ -1,17 +1,16 @@
-﻿using System;
+﻿using MediatR;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Task.Application.Responses;
 
-namespace Task.Domain.Entities
+namespace Task.Application.Features.StoreItems.Query
 {
-    public class StoreItem
+    public class GetStoreItemBalanceQuery : IRequest<BaseResponse<int>>
     {
         public int StoreId { get; set; }
-        public Store Store { get; set; }
         public int ItemId { get; set; }
-        public Item Item { get; set; }
-        public int Quantity { get; set; }
     }
 }

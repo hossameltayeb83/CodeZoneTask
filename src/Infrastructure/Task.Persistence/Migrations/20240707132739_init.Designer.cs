@@ -11,7 +11,7 @@ using Task.Persistence.Data;
 namespace Task.Persistence.Migrations
 {
     [DbContext(typeof(TaskContext))]
-    [Migration("20240706141306_init")]
+    [Migration("20240707132739_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -322,7 +322,7 @@ namespace Task.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Task.Domain.Entities.Store", "store")
+                    b.HasOne("Task.Domain.Entities.Store", "Store")
                         .WithMany()
                         .HasForeignKey("StoreId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -330,7 +330,7 @@ namespace Task.Persistence.Migrations
 
                     b.Navigation("Item");
 
-                    b.Navigation("store");
+                    b.Navigation("Store");
                 });
 #pragma warning restore 612, 618
         }
