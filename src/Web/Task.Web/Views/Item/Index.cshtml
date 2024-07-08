@@ -46,26 +46,7 @@
         <li class="page-item @(Model.HasNextPage?"":"disabled") ">
             <a class="page-link" asp-action="" asp-route-page="@(Model.Page+1)" asp-route-pageSize="@(Model.PageSize)">Next</a>
         </li>
-@*         <li class="page-item">
-            <input class="page-link w-25 px-2" type="number" value="@Model.PageSize" id="perPage" />
-        </li> *@
+
     </ul>
 </nav>
-@* @section Scripts{
-
-    <script>
-        $(document).ready(function () {
-            $('#perPage').change(function () {
-                console.log($(this).val());
-                let newPageSize = $(this).val();
-                $('.page-link').each(function () {
-                    let href = $(this).attr('href');
-                    let i = href.length - 1;
-                    while (isDigit(href[i])) { i--; }
-                    let newHref=href.slice()
-                    $(this).attr('href', href + `&pageSize=${newPageSize}`);
-                });
-            });
-        });
-    </script> *@
 

@@ -114,8 +114,8 @@ namespace Task.Persistence.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Image")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -191,122 +191,122 @@ namespace Task.Persistence.Migrations
 
             modelBuilder.Entity("Task.Domain.Entities.StoreItem", b =>
                 {
-                    b.Property<int>("StoreId")
+                    b.Property<int>("ItemId")
                         .HasColumnType("int");
 
-                    b.Property<int>("ItemId")
+                    b.Property<int>("StoreId")
                         .HasColumnType("int");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
-                    b.HasKey("StoreId", "ItemId");
+                    b.HasKey("ItemId", "StoreId");
 
-                    b.HasIndex("ItemId");
+                    b.HasIndex("StoreId");
 
                     b.ToTable("StoreItems");
 
                     b.HasData(
                         new
                         {
-                            StoreId = 4,
                             ItemId = 5,
+                            StoreId = 4,
                             Quantity = 60
                         },
                         new
                         {
-                            StoreId = 1,
                             ItemId = 10,
+                            StoreId = 1,
                             Quantity = 56
                         },
                         new
                         {
-                            StoreId = 4,
                             ItemId = 1,
+                            StoreId = 4,
                             Quantity = 100
                         },
                         new
                         {
-                            StoreId = 1,
                             ItemId = 4,
+                            StoreId = 1,
                             Quantity = 5
                         },
                         new
                         {
-                            StoreId = 6,
                             ItemId = 6,
+                            StoreId = 6,
                             Quantity = 86
                         },
                         new
                         {
-                            StoreId = 6,
                             ItemId = 5,
+                            StoreId = 6,
                             Quantity = 31
                         },
                         new
                         {
-                            StoreId = 3,
                             ItemId = 8,
+                            StoreId = 3,
                             Quantity = 77
                         },
                         new
                         {
-                            StoreId = 1,
                             ItemId = 7,
+                            StoreId = 1,
                             Quantity = 20
                         },
                         new
                         {
-                            StoreId = 8,
                             ItemId = 6,
+                            StoreId = 8,
                             Quantity = 16
                         },
                         new
                         {
-                            StoreId = 5,
                             ItemId = 2,
+                            StoreId = 5,
                             Quantity = 7
                         },
                         new
                         {
-                            StoreId = 10,
                             ItemId = 3,
+                            StoreId = 10,
                             Quantity = 93
                         },
                         new
                         {
-                            StoreId = 5,
                             ItemId = 5,
+                            StoreId = 5,
                             Quantity = 83
                         },
                         new
                         {
-                            StoreId = 1,
                             ItemId = 1,
+                            StoreId = 1,
                             Quantity = 54
                         },
                         new
                         {
-                            StoreId = 3,
                             ItemId = 7,
+                            StoreId = 3,
                             Quantity = 9
                         },
                         new
                         {
-                            StoreId = 6,
                             ItemId = 9,
+                            StoreId = 6,
                             Quantity = 99
                         },
                         new
                         {
-                            StoreId = 5,
                             ItemId = 3,
+                            StoreId = 5,
                             Quantity = 76
                         },
                         new
                         {
-                            StoreId = 9,
                             ItemId = 6,
+                            StoreId = 9,
                             Quantity = 49
                         });
                 });

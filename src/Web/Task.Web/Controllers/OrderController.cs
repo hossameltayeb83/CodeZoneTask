@@ -37,16 +37,17 @@ namespace Task.Web.Controllers
             return View(transactionVm);
         }
         [HttpPost]
-        public async Task<IActionResult> Transaction(TransactionViewModel transactionViewModel)
+        public async Task<IActionResult> Transaction(TransactionViewModel transactionVm)
         {
             if (ModelState.IsValid)
             {
-                var response= await _mediator.Send(new UpdateStoreItemCommand { StoreId=transactionViewModel.StoreId!.Value,
-                ItemId=transactionViewModel.ItemId!.Value,
-                Quantity=transactionViewModel.Quantity,
-                Transaction=transactionViewModel.Transaction} );
+                var response= await _mediator.Send(new UpdateStoreItemCommand { StoreId=transactionVm.StoreId!.Value,
+                ItemId=transactionVm.ItemId!.Value,
+                Quantity=transactionVm.Quantity,
+                Transaction=transactionVm.Transaction} );
             }
-            return RedirectToAction("Transaction", new {storeId=transactionViewModel.StoreId,itemId=transactionViewModel.ItemId});
+            return RedirectToAction("Transaction", new {storeId=transactionVm.StoreId,itemId=transactionVm.ItemId});
+
         }
         public async Task<IActionResult> Balance(int storeId,int itemId)
         {

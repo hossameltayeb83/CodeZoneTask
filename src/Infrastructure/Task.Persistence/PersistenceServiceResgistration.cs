@@ -21,6 +21,7 @@ namespace Task.Persistence
                 opt.UseSqlServer(configuration.GetConnectionString("DevConnection"));
             });
             services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
+            services.AddScoped<IStoreItemRepository, StoreItemRepository>();
             return services;
         }
     }

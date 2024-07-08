@@ -26,16 +26,9 @@ namespace Task.Web.Controllers
             var response = await _mediator.Send(new GetPaginatedStoresQuery { Page=page,PageSize=pageSize});
             
             var result = response.Result;
-            var resultVm = _mapper.Map<List<StoreViewModel>>(result.Items);
 
-            var paginatedVm = new PaginatedViewModel<List<StoreViewModel>>() { Items=resultVm,
-                HasNextPage=result.HasNextPage,
-                HasPreviousPage=result.HasPreviousPage,
-                Page=result.Page,
-                PageSize=result.PageSize,
-                TotalCount=result.TotalCount,
-                TotalPages=result.TotalPages
-            };
+            var paginatedVm= _mapper.Map<PaginatedViewModel<List<StoreViewModel>>>(result);
+
             return View(paginatedVm);
         }
         public IActionResult Add()

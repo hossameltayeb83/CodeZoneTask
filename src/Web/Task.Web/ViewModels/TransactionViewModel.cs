@@ -1,15 +1,18 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
+using System.Configuration;
 using Task.Domain.Enums;
 
 namespace Task.Web.ViewModels
 {
     public class TransactionViewModel
     {
+        [Required(ErrorMessage = "*")]
         public int? StoreId { get; set; }
+        [Required(ErrorMessage = "*")]
         public int? ItemId { get; set; }
         [Required(ErrorMessage ="*")]
-        [Range(1, int.MaxValue,ErrorMessage ="Quantity Must Be Greater Than 1")]
+        [RegularExpression("([1-9][0-9]*)", ErrorMessage = "Quantity must be a whole number bigger than 0")]
         [Remote("CheckBalance",
             "Order",
             AdditionalFields ="StoreId,ItemId,Quantity,Transaction",
@@ -20,5 +23,4 @@ namespace Task.Web.ViewModels
         public List<ItemViewModel>? Items { get; set; }
         public TransactionType Transaction { get; set; }
     }
-
 }

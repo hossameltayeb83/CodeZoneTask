@@ -10,8 +10,7 @@ namespace Task.Web.Profiles
         public StoreProfile()
         {
             CreateMap<StoreDto,StoreViewModel>();
-            //CreateMap(typeof(PaginatedResponse<>), typeof(PaginatedViewModel<>));
-                
+            CreateMap<PaginatedResponse<StoreDto>, PaginatedViewModel<List<StoreViewModel>>>();
         }
     }
 }

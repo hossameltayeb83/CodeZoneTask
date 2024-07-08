@@ -8,7 +8,7 @@ namespace Task.Application.Contracts.Persistence
 {
     public interface IRepository<T> where T : class
     {
-        ValueTask<T?> GetByIdAsync(params int[] ids);
+        ValueTask<T?> GetByIdAsync(int id);
         Task<IReadOnlyList<T>> GetALLAsync();
         Task<(IReadOnlyList<T> Items, int Count)> GetPaginatedListAsync(int page, int pageSize);
         Task<bool> AddAsync(T entity);

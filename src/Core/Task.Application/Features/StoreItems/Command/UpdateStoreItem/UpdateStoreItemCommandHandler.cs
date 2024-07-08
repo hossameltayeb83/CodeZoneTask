@@ -15,10 +15,10 @@ namespace Task.Application.Features.StoreItems.Command.UpdateStoreItem
 {
     internal class UpdateStoreItemCommandHandler : IRequestHandler<UpdateStoreItemCommand, BaseResponse>
     {
-        private readonly IRepository<StoreItem> _storeItemRepository;
+        private readonly IStoreItemRepository _storeItemRepository;
         private readonly IMapper _mapper;
 
-        public UpdateStoreItemCommandHandler(IRepository<StoreItem> storeItemRepository, IMapper mapper)
+        public UpdateStoreItemCommandHandler(IStoreItemRepository storeItemRepository, IMapper mapper)
         {
             _storeItemRepository = storeItemRepository;
             _mapper = mapper;
@@ -26,7 +26,7 @@ namespace Task.Application.Features.StoreItems.Command.UpdateStoreItem
         public async Task<BaseResponse> Handle(UpdateStoreItemCommand request, CancellationToken cancellationToken)
         {
             var response= new BaseResponse();
-            var storeItem = await _storeItemRepository.GetByIdAsync(request.ItemId, request.StoreId);
+            var storeItem = await _storeItemRepository.GetStoreItemAsync(request.StoreId, request.ItemId);
             if (storeItem!=null)
             {
                 if (request.Transaction == TransactionType.Purchase)
