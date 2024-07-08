@@ -21,7 +21,9 @@ namespace Task.Application.Features.StoreItems.Query.GetStoreItemBalance
         public async Task<BaseResponse<int>> Handle(GetStoreItemBalanceQuery request, CancellationToken cancellationToken)
         {
             var response = new BaseResponse<int>();
+
             var storeItem= await _storeItemRepository.GetByIdAsync(request.ItemId, request.StoreId);
+
             if (storeItem!=null)
             {
                 response.Result = storeItem.Quantity;
@@ -30,6 +32,7 @@ namespace Task.Application.Features.StoreItems.Query.GetStoreItemBalance
             {
                 response.Result = 0;
             }
+
             return response;
         }
     }

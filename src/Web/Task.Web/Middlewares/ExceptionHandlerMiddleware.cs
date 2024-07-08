@@ -9,9 +9,15 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Bogus.DataSets;
+using Microsoft.AspNetCore.Mvc;
+using Task.Application.Exceptions;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Task.Web.Models;
 
 
-namespace Task.Application.Middlewares
+namespace Task.Web.Middlewares
 {
     public class ExceptionHandlerMiddleware
     {
@@ -22,7 +28,7 @@ namespace Task.Application.Middlewares
             _next = next;
         }
 
-        public async Task Invoke(HttpContext httpContext)
+        public async System.Threading.Tasks.Task Invoke(HttpContext httpContext)
         {
             try
             {
@@ -34,41 +40,41 @@ namespace Task.Application.Middlewares
             }
         }
 
-        private Task HandleException(HttpContext httpContext, Exception exception)
+        private async System.Threading.Tasks.Task HandleException(HttpContext httpContext, Exception exception)
         {
-            HttpStatusCode statusCode = HttpStatusCode.InternalServerError;
-            httpContext.Response.ContentType = "application/json";
-            string result = string.Empty;
 
+            HttpStatusCode statusCode=HttpStatusCode.InternalServerError;
+            string errorMessage="internal servel error";
             switch (exception)
             {
-                case ValidationException validationException:
-                    statusCode = HttpStatusCode.BadRequest;
-                    result = JsonSerializer.Serialize(new { errors = validationException.ValdationErrors });
-                    break;
                 case BadRequestException:
                     statusCode = HttpStatusCode.BadRequest;
+                    errorMessage = exception.Message;
                     break;
                 case NotFoundException:
                     statusCode = HttpStatusCode.NotFound;
-                    break;
-                case NotAuthorizedException:
-                    statusCode = HttpStatusCode.Unauthorized;
-                    break;
-                case Exception:
-                    statusCode = HttpStatusCode.InternalServerError;
+                    errorMessage= exception.Message;
                     break;
             }
+
 
             httpContext.Response.StatusCode = (int)statusCode;
 
-            if (result == string.Empty)
+            var result = new ViewResult
             {
-                result = JsonSerializer.Serialize(new { errors = new List<string> { exception.Message } });
-            }
+                ViewName = "Error",               
+                ViewData = new ViewDataDictionary(new EmptyModelMetadataProvider(), new ModelStateDictionary())
+                {
+                    Model = new ErrorViewModel { StatusCode= (int)statusCode,Message=errorMessage }
+                }
+            };
 
-
-            return httpContext.Response.WriteAsync(result);
+            await result.ExecuteResultAsync(new ActionContext
+            {
+                HttpContext = httpContext,
+                RouteData= httpContext.GetRouteData(),
+                ActionDescriptor = new Microsoft.AspNetCore.Mvc.Controllers.ControllerActionDescriptor()
+            });
         }
     }
 

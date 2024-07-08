@@ -29,69 +29,66 @@ namespace Task.Web.Controllers
         public async Task<IActionResult> Index(int page = 1, int pageSize = 5)
         {
             var response = await _mediator.Send(new GetPaginatedItemsQuery { Page = page, PageSize = pageSize });
-            // Todo: manageExeptions
-            if (response.Success)
+            
+            var result = response.Result;
+            var resultVm = _mapper.Map<List<ItemViewModel>>(result.Items);
+
+            var paginatedVm = new PaginatedViewModel<List<ItemViewModel>>
             {
-                var result = response.Result;
-                var resultVm = _mapper.Map<List<ItemViewModel>>(result.Items);
-                // Todo: pass to constructor instead
-                var paginatedVm = new PaginatedViewModel<List<ItemViewModel>>
-                {
-                    Items = resultVm,
-                    HasNextPage = result.HasNextPage,
-                    HasPreviousPage = result.HasPreviousPage,
-                    Page = result.Page,
-                    PageSize = result.PageSize,
-                    TotalCount = result.TotalCount,
-                    TotalPages = result.TotalPages
-                };
-                return View(paginatedVm);
-            }
-            return View();
+                Items = resultVm,
+                HasNextPage = result.HasNextPage,
+                HasPreviousPage = result.HasPreviousPage,
+                Page = result.Page,
+                PageSize = result.PageSize,
+                TotalCount = result.TotalCount,
+                TotalPages = result.TotalPages
+            };
+            return View(paginatedVm);
         }
         public IActionResult Add()
         {
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> Add(IFormFile image, ItemViewModel itemVm)
+        public async Task<IActionResult> Add(WriteItemViewModel itemVm)
         {
             BaseResponse<int> response;
-            if (image != null)
+            if (ModelState.IsValid)
             {
-
-                response = await _mediator.Send(new CreateItemCommand { Name = itemVm.Name, Image = "TBD" });
-                if (response.Success)
+                if (itemVm.Image != null)
                 {
+
+                    response = await _mediator.Send(new CreateItemCommand { Name = itemVm.Name, Image = "TBD" });
                     var imgPath = @$"Images\Items\{response.Result}.jpg";
                     var fullPath = @$"wwwroot\{imgPath}";
                     using (FileStream stream = System.IO.File.Create(fullPath))
                     {
-                        await image.CopyToAsync(stream);
+                        await itemVm.Image.CopyToAsync(stream);
                     }
+                
                 }
+                else
+                {
+                    await _mediator.Send(new CreateItemCommand { Name = itemVm.Name });
+                }
+                return RedirectToAction("Index");
             }
-            else
-            {
-                response = await _mediator.Send(new CreateItemCommand { Name = itemVm.Name });
-            }
-            return RedirectToAction("Index");
+            return View(itemVm);
         }
         public async Task<IActionResult> Edit(int id)
         {
             var response = await _mediator.Send(new GetItemDetailsQuery { Id = id });
-            if (response.Success)
-            {
-                var itemVm = _mapper.Map<ItemViewModel>(response.Result);
-                View(itemVm);
-            }
-            return View();
+            
+            var itemVm = _mapper.Map<ItemViewModel>(response.Result);
+            return View(itemVm);
+            
         }
         [HttpPost]
-        public async Task<IActionResult> Edit(IFormFile image, ItemViewModel itemVm)
+        public async Task<IActionResult> Edit(WriteItemViewModel itemVm)
         {
             BaseResponse response;
-            if (image != null)
+
+            if(ModelState.IsValid)
             {
                 var imgPath = @$"Images\Items\{itemVm.Id}.jpg";
                 var fullPath = @$"wwwroot\{imgPath}";
@@ -99,48 +96,42 @@ namespace Task.Web.Controllers
                 {
                     System.IO.File.Delete(fullPath);
                 }
-                using (FileStream stream = System.IO.File.Create(fullPath))
+                if (itemVm.Image != null)
                 {
-                    await image.CopyToAsync(stream);
+                    using (FileStream stream = System.IO.File.Create(fullPath))
+                    {
+                        await itemVm.Image.CopyToAsync(stream);
+                    }
+                    response = await _mediator.Send(new UpdateItemCommand { Id = itemVm.Id, Name = itemVm.Name, Image = imgPath });
                 }
-                response = await _mediator.Send(new UpdateItemCommand { Id = itemVm.Id, Name = itemVm.Name, Image = imgPath });
+                else
+                {
+                    response = await _mediator.Send(new UpdateItemCommand { Id = itemVm.Id, Name = itemVm.Name });
+                }
+                return RedirectToAction("Index");
             }
-            else
-            {
-                response = await _mediator.Send(new UpdateItemCommand { Id = itemVm.Id, Name = itemVm.Name });
-            }
-            //Todo : manage failure
-            //if (response.Success)
-            //{
-            //    //var storeVm = _mapper.Map<StoreViewModel>(response.Result);
-            //    View(storeVm);
-            //}
-            return RedirectToAction("Index");
+            return View(itemVm);
         }
         public async Task<IActionResult> Delete(int id)
         {
             var response = await _mediator.Send(new GetItemDetailsQuery { Id = id });
-            if (response.Success)
-            {
-                var ItemVm = _mapper.Map<ItemViewModel>(response.Result);
-                View(ItemVm);
-            }
-            return View();
+
+            var ItemVm = _mapper.Map<ItemViewModel>(response.Result);
+            return View(ItemVm);
         }
 
         public async Task<IActionResult> ConfirmDelete(int id)
         {
             var imgPath = @$"Images\Items\{id}.jpg";
             var fullPath = @$"wwwroot\{imgPath}";
-            var response = await _mediator.Send(new DeleteItemCommand { Id = id });
-            //Todo : manage failure
-            if (response.Success)
+
+            await _mediator.Send(new DeleteItemCommand { Id = id });
+            
+            if (System.IO.File.Exists(fullPath))
             {
-                if (System.IO.File.Exists(fullPath))
-                {
-                    System.IO.File.Delete(fullPath);
-                }
+                System.IO.File.Delete(fullPath);
             }
+            
             return RedirectToAction("Index");
         }
     }

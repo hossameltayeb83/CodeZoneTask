@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Task.Application.Contracts.Persistence;
+using Task.Application.Exceptions;
 using Task.Application.Responses;
 using Task.Domain.Entities;
 
@@ -20,12 +21,13 @@ namespace Task.Application.Features.Stores.Command.DeleteStore
         }
         public async Task<BaseResponse> Handle(DeleteStoreCommand request, CancellationToken cancellationToken)
         {
-            var response = new BaseResponse() { Success=false};
+            var response = new BaseResponse();
+
             var storeToDelete=await _storeRepository.GetByIdAsync(request.Id);
-            if (storeToDelete != null)
-            {
-               response.Success= await _storeRepository.DeleteAsync(storeToDelete);
-            }
+            if (storeToDelete == null)
+                throw new NotFoundException("Store Not Found");
+
+            response.Success= await _storeRepository.DeleteAsync(storeToDelete);
             return response;
         }
     }

@@ -26,8 +26,10 @@ namespace Task.Application.Features.Items.Query.GetPaginatedItems
         public async Task<BaseResponse<PaginatedResponse<ItemDto>>> Handle(GetPaginatedItemsQuery request, CancellationToken cancellationToken)
         {
             var response = new BaseResponse<PaginatedResponse<ItemDto>>();
+
             var items = await _itemRepository.GetPaginatedListAsync(request.Page, request.PageSize);
             var itemsDto = _mapper.Map<List<ItemDto>>(items.Items);
+
             response.Result = new PaginatedResponse<ItemDto>(itemsDto, request.Page, request.PageSize, items.Count);
             return response;
         }

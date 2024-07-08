@@ -1,4 +1,6 @@
-﻿namespace Task.Web.ViewModels
+﻿using Task.Application.Responses;
+
+namespace Task.Web.ViewModels
 {
     public class PaginatedViewModel<T> where T : class
     {
@@ -9,5 +11,19 @@
         public int TotalCount { get; set; }
         public bool HasNextPage { get; set; }
         public bool HasPreviousPage { get; set; }
+        public PaginatedViewModel()
+        {
+            
+        }
+        public PaginatedViewModel(T items, PaginatedResponse<T> paginatedResponse)
+        {
+            Items = items;
+            HasNextPage = paginatedResponse.HasNextPage;
+            HasPreviousPage = paginatedResponse.HasPreviousPage;
+            Page = paginatedResponse.Page;
+            PageSize = paginatedResponse.PageSize;
+            TotalCount = paginatedResponse.TotalCount;
+            TotalPages = paginatedResponse.TotalPages;
+        }
     }
 }

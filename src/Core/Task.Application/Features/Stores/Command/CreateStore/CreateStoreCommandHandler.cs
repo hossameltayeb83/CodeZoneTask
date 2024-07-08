@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Task.Application.Contracts.Persistence;
+using Task.Application.Exceptions;
 using Task.Application.Features.Stores.Query;
 using Task.Application.Responses;
 using Task.Domain.Entities;
@@ -26,13 +27,19 @@ namespace Task.Application.Features.Stores.Command.CreateStore
         public async Task<BaseResponse<int>> Handle(CreateStoreCommand request, CancellationToken cancellationToken)
         {
             var response = new BaseResponse<int>();
+
+            if (request.Name.Length < 3 || request.Name.Length > 100)
+                throw new BadRequestException("Store name must be between 3 and 100 characters");
+
             var storeToCreate= _mapper.Map<Store>(request);
             await _storeRepository.AddAsync(storeToCreate);
+
             if (storeToCreate.Image != null)
             {
                 storeToCreate.Image= @$"Images\Stores\{storeToCreate.Id}.jpg";
                 await _storeRepository.UpdateAsync(storeToCreate);
             }
+
             response.Result=storeToCreate.Id;
             return response;
         }

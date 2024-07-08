@@ -25,8 +25,10 @@ namespace Task.Application.Features.Stores.Query.GetAllStores
         public async Task<BaseResponse<List<StoreDto>>> Handle(GetAllStoresQuery request, CancellationToken cancellationToken)
         {
             var response = new BaseResponse<List<StoreDto>>();
+
             var stores = await _storeRepository.GetALLAsync();
             var storesDto = _mapper.Map<List<StoreDto>>(stores);
+
             response.Result = storesDto;
             return response;
         }

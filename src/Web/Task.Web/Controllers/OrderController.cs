@@ -23,12 +23,15 @@ namespace Task.Web.Controllers
         public async Task<IActionResult> Transaction(int? storeId,int? itemId)
         {
             var transactionVm = new TransactionViewModel();
+
             if (storeId.HasValue)
                 transactionVm.StoreId = storeId.Value;
             if(itemId.HasValue)
                 transactionVm.ItemId = itemId.Value;
+
             var storesResponse = await _mediator.Send(new GetAllStoresQuery());
             var itemsResponse = await _mediator.Send(new GetAllItemsQuery());
+
             transactionVm.Stores= _mapper.Map<List<StoreViewModel>>(storesResponse.Result);
             transactionVm.Items= _mapper.Map<List<ItemViewModel>>(itemsResponse.Result);
             return View(transactionVm);

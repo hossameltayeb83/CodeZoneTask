@@ -7,6 +7,7 @@
     <form asp-action="Edit" enctype="multipart/form-data">
         <div class="mb-3">
             <label asp-for="Name" class="form-label">Name</label>
+            <span asp-validation-for="Name" class="text-danger"></span>
             <input type="text" class="form-control" asp-for="Name"/>
         </div>
         <div class="mb-3">
@@ -16,3 +17,7 @@
         <button type="submit" class="btn btn-primary">Edit</button>
     </form>
 </div>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial.cshtml" />
+}
+

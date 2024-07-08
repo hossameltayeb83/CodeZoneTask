@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Task.Application.Contracts.Persistence;
+using Task.Application.Exceptions;
 using Task.Application.Responses;
 using Task.Domain.Entities;
 using Task.Domain.Enums;
@@ -32,16 +33,23 @@ namespace Task.Application.Features.StoreItems.Command.UpdateStoreItem
                 {
                     storeItem.Quantity += request.Quantity;
                 }
-                else if(storeItem.Quantity-request.Quantity >= 0) 
+                else 
                 {
-                    storeItem.Quantity -= request.Quantity;
+                    if (storeItem.Quantity - request.Quantity >= 0)
+                    {
+                        storeItem.Quantity -= request.Quantity;
+                    }
+                    else
+                    {
+                        throw new BadRequestException("Balance can't Be negative");
+                    }
                 }
                 response.Success=await _storeItemRepository.UpdateAsync(storeItem);
             }
             else
             {
-                //todo : use mapper
-                response.Success = await _storeItemRepository.AddAsync(new StoreItem { StoreId=request.StoreId,ItemId=request.ItemId,Quantity=request.Quantity});
+                var storeItemToCreate = _mapper.Map<StoreItem>(request); 
+                response.Success = await _storeItemRepository.AddAsync(storeItemToCreate);
             }
             return response;
         }

@@ -8,7 +8,7 @@ namespace Task.Web.ViewModels
     {
         public int? StoreId { get; set; }
         public int? ItemId { get; set; }
-        [Required]
+        [Required(ErrorMessage ="*")]
         [Range(1, int.MaxValue,ErrorMessage ="Quantity Must Be Greater Than 1")]
         [Remote("CheckBalance",
             "Order",

@@ -1,5 +1,6 @@
+using Task.Web.Middlewares;
 using Task.Application;
-using Task.Application.Middlewares;
+
 using Task.Persistence;
 namespace Task.Web
 {

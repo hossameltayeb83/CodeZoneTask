@@ -1,4 +1,4 @@
-﻿@model StoreViewModel
+﻿@model WriteStoreViewModel
 
 @{
     ViewData["Title"] = "Store | Create";
@@ -7,12 +7,17 @@
     <form asp-action="Add" enctype="multipart/form-data">
         <div class="mb-3">
             <label asp-for="Name" class="form-label">Name</label>
+            <span asp-validation-for="Name" class="text-danger"></span>
             <input type="text" class="form-control" asp-for="Name" />
         </div>
         <div class="mb-3">
-            <label for="Image" class="form-label">Image</label>
-            <input type="file" class="form-control" name="image">
+            <label asp-for="Image" class="form-label">Image</label>
+            <input type="file" class="form-control" asp-for="Image">
         </div>
         <button type="submit" class="btn btn-success">Add</button>
     </form>
 </div>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial.cshtml" />
+}
+

@@ -24,8 +24,10 @@ namespace Task.Application.Features.Stores.Query.GetPaginatedStores
         public async Task<BaseResponse<PaginatedResponse<StoreDto>>> Handle(GetPaginatedStoresQuery request, CancellationToken cancellationToken)
         {
             var response = new BaseResponse<PaginatedResponse<StoreDto>>();
+
             var stores = await _storeRepository.GetPaginatedListAsync(request.Page, request.PageSize);
             var storesDto = _mapper.Map<List<StoreDto>>(stores.Items);
+
             response.Result = new PaginatedResponse<StoreDto>(storesDto, request.Page, request.PageSize, stores.Count);
             return response;
         }

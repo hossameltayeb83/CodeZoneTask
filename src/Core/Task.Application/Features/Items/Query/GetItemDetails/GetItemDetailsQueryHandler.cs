@@ -10,6 +10,7 @@ using Task.Application.Features.Stores.Query.GetStoreDetails;
 using Task.Application.Features.Stores.Query;
 using Task.Application.Responses;
 using Task.Domain.Entities;
+using Task.Application.Exceptions;
 
 namespace Task.Application.Features.Items.Query.GetItemDetails
 {
@@ -26,8 +27,13 @@ namespace Task.Application.Features.Items.Query.GetItemDetails
         public async Task<BaseResponse<ItemDto>> Handle(GetItemDetailsQuery request, CancellationToken cancellationToken)
         {
             var response = new BaseResponse<ItemDto>();
+
             var item = await _itemRepository.GetByIdAsync(request.Id);
+            if (item == null)
+                throw new NotFoundException("Item Not Found");
+
             var itemDto = _mapper.Map<ItemDto>(item);
+
             response.Result = itemDto;
             return response;
         }

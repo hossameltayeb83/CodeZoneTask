@@ -38,14 +38,6 @@ namespace Task.Persistence.Repositories
             T? result;
             object[] keys = ids.Cast<object>().ToArray();
             result = await _context.Set<T>().FindAsync(keys);
-            //if (ids.Length == 1)
-            //{
-            //    result= await _context.Set<T>().FindAsync(ids[0]);
-            //}
-            //else
-            //{
-            //    result = await _context.Set<T>().FindAsync(ids[0], ids[1]);
-            //}
             return result;
         }
 

@@ -1,4 +1,4 @@
-﻿@model ItemViewModel
+﻿@model WriteItemViewModel
 
 @{
     ViewData["Title"] = "Item | Create";
@@ -11,8 +11,8 @@
         <input type="text" class="form-control" asp-for="Name" />
     </div>
     <div class="mb-3">
-        <label for="Image" class="form-label">Image</label>
-        <input type="file" class="form-control" name="image">
+        <label asp-for="Image" class="form-label">Image</label>
+        <input type="file" class="form-control" asp-for="Image">
     </div>
     <button type="submit" class="btn btn-success">Add</button>
 </form>

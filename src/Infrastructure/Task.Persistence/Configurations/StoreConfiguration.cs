@@ -19,7 +19,7 @@ namespace Task.Persistence.Configurations
             builder.Property(e=>e.Name)
                 .HasMaxLength(100);
             builder.Property(e=>e.Image)
-                .HasMaxLength(200);
+                .HasMaxLength(100);
         }
     }
 }

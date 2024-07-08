@@ -24,8 +24,10 @@ namespace Task.Application.Features.Items.Query.GetAllItems
         public async Task<BaseResponse<List<ItemDto>>> Handle(GetAllItemsQuery request, CancellationToken cancellationToken)
         {
             var response = new BaseResponse<List<ItemDto>>();
+
             var items = await _itemRepository.GetALLAsync();
             var itemsDtos = _mapper.Map<List<ItemDto>>(items);
+
             response.Result = itemsDtos;
             return response;
         }
