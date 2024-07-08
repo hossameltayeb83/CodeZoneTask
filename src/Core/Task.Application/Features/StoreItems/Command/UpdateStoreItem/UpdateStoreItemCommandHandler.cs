@@ -25,14 +25,14 @@ namespace Task.Application.Features.StoreItems.Command.UpdateStoreItem
         public async Task<BaseResponse> Handle(UpdateStoreItemCommand request, CancellationToken cancellationToken)
         {
             var response= new BaseResponse();
-            var storeItem = await _storeItemRepository.GetByIdAsync(request.StoreId, request.ItemId);
+            var storeItem = await _storeItemRepository.GetByIdAsync(request.ItemId, request.StoreId);
             if (storeItem!=null)
             {
                 if (request.Transaction == TransactionType.Purchase)
                 {
                     storeItem.Quantity += request.Quantity;
                 }
-                else
+                else if(storeItem.Quantity-request.Quantity >= 0) 
                 {
                     storeItem.Quantity -= request.Quantity;
                 }

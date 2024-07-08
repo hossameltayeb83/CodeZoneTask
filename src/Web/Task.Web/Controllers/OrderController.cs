@@ -5,6 +5,8 @@ using Task.Application.Features.Items.Query.GetAllItems;
 using Task.Application.Features.Stores.Query.GetAllStores;
 using Task.Application.Features.StoreItems.Query.GetStoreItemBalance;
 using Task.Web.ViewModels;
+using Task.Application.Features.StoreItems.Command.UpdateStoreItem;
+using Task.Domain.Enums;
 
 namespace Task.Web.Controllers
 {
@@ -18,33 +20,48 @@ namespace Task.Web.Controllers
             _mediator = mediator;
             _mapper = mapper;
         }
-        public async Task<IActionResult> Purchase(int? storeId,int? itemId)
+        public async Task<IActionResult> Transaction(int? storeId,int? itemId)
         {
-            var purchaseVm = new PurchaseViewModel();
+            var transactionVm = new TransactionViewModel();
             if (storeId.HasValue)
-                purchaseVm.StoreId = storeId.Value;
+                transactionVm.StoreId = storeId.Value;
             if(itemId.HasValue)
-                purchaseVm.ItemId = itemId.Value;
+                transactionVm.ItemId = itemId.Value;
             var storesResponse = await _mediator.Send(new GetAllStoresQuery());
             var itemsResponse = await _mediator.Send(new GetAllItemsQuery());
-            purchaseVm.Stores= _mapper.Map<List<StoreViewModel>>(storesResponse.Result);
-            purchaseVm.Items= _mapper.Map<List<ItemViewModel>>(itemsResponse.Result);
-            return View(purchaseVm);
+            transactionVm.Stores= _mapper.Map<List<StoreViewModel>>(storesResponse.Result);
+            transactionVm.Items= _mapper.Map<List<ItemViewModel>>(itemsResponse.Result);
+            return View(transactionVm);
         }
         [HttpPost]
-        public IActionResult Purchase(PurchaseViewModel purchaseViewModel)
+        public async Task<IActionResult> Transaction(TransactionViewModel transactionViewModel)
         {
             if (ModelState.IsValid)
             {
-                //var response= _mediator.Send(new UpdateStoreItemCommand { } );
-                return RedirectToAction("Purchase", new {storeId=purchaseViewModel.StoreId,itemId=purchaseViewModel.ItemId});
+                var response= await _mediator.Send(new UpdateStoreItemCommand { StoreId=transactionViewModel.StoreId!.Value,
+                ItemId=transactionViewModel.ItemId!.Value,
+                Quantity=transactionViewModel.Quantity,
+                Transaction=transactionViewModel.Transaction} );
             }
-            return View(purchaseViewModel);
+            return RedirectToAction("Transaction", new {storeId=transactionViewModel.StoreId,itemId=transactionViewModel.ItemId});
         }
         public async Task<IActionResult> Balance(int storeId,int itemId)
         {
             var response = await _mediator.Send(new GetStoreItemBalanceQuery { StoreId=storeId,ItemId=itemId});
             return Ok(response.Result);
+        }
+        public async Task<IActionResult> CheckBalance(int storeId, int itemId,int quantity,TransactionType transaction)
+        {
+            bool valid = true;
+            if (transaction == TransactionType.Sell)
+            {
+                var response = await _mediator.Send(new GetStoreItemBalanceQuery { StoreId = storeId, ItemId = itemId });
+                if(response.Result-quantity<0)
+                {
+                    valid=false;
+                }
+            }
+            return Json(valid);
         }
     }
 }

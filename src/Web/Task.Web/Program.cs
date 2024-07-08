@@ -1,4 +1,5 @@
 using Task.Application;
+using Task.Application.Middlewares;
 using Task.Persistence;
 namespace Task.Web
 {
@@ -24,7 +25,7 @@ namespace Task.Web
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
+            app.UseExceptionHandlerMiddleware();
             app.UseRouting();
 
             app.UseAuthorization();

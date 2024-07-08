@@ -50,7 +50,7 @@ namespace Task.Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_StoreItems", x => new { x.ItemId, x.StoreId });
+                    table.PrimaryKey("PK_StoreItems", x => new { x.StoreId, x.ItemId });
                     table.ForeignKey(
                         name: "FK_StoreItems_Items_ItemId",
                         column: x => x.ItemId,
@@ -105,28 +105,28 @@ namespace Task.Persistence.Migrations
                 values: new object[,]
                 {
                     { 1, 1, 54 },
+                    { 4, 1, 5 },
+                    { 7, 1, 20 },
+                    { 10, 1, 56 },
+                    { 7, 3, 9 },
+                    { 8, 3, 77 },
                     { 1, 4, 100 },
+                    { 5, 4, 60 },
                     { 2, 5, 7 },
                     { 3, 5, 76 },
-                    { 3, 10, 93 },
-                    { 4, 1, 5 },
-                    { 5, 4, 60 },
                     { 5, 5, 83 },
                     { 5, 6, 31 },
                     { 6, 6, 86 },
+                    { 9, 6, 99 },
                     { 6, 8, 16 },
                     { 6, 9, 49 },
-                    { 7, 1, 20 },
-                    { 7, 3, 9 },
-                    { 8, 3, 77 },
-                    { 9, 6, 99 },
-                    { 10, 1, 56 }
+                    { 3, 10, 93 }
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_StoreItems_StoreId",
+                name: "IX_StoreItems_ItemId",
                 table: "StoreItems",
-                column: "StoreId");
+                column: "ItemId");
         }
 
         /// <inheritdoc />
