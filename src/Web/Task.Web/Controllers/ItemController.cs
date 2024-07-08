@@ -6,11 +6,6 @@ using Task.Application.Features.Items.Command.DeleteItem;
 using Task.Application.Features.Items.Command.UpdateItem;
 using Task.Application.Features.Items.Query.GetItemDetails;
 using Task.Application.Features.Items.Query.GetPaginatedItems;
-using Task.Application.Features.Stores.Command.CreateStore;
-using Task.Application.Features.Stores.Command.DeleteStore;
-using Task.Application.Features.Stores.Command.UpdateStore;
-using Task.Application.Features.Stores.Query.GetPaginatedStores;
-using Task.Application.Features.Stores.Query.GetStoreDetails;
 using Task.Application.Responses;
 using Task.Web.ViewModels;
 
@@ -43,25 +38,10 @@ namespace Task.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Add(WriteItemViewModel itemVm)
         {
-            BaseResponse<int> response;
             if (ModelState.IsValid)
             {
-                if (itemVm.Image != null)
-                {
+                await _mediator.Send(new CreateItemCommand { Name = itemVm.Name, Image = itemVm.Image });
 
-                    response = await _mediator.Send(new CreateItemCommand { Name = itemVm.Name, Image = "TBD" });
-                    var imgPath = @$"Images\Items\{response.Result}.jpg";
-                    var fullPath = @$"wwwroot\{imgPath}";
-                    using (FileStream stream = System.IO.File.Create(fullPath))
-                    {
-                        await itemVm.Image.CopyToAsync(stream);
-                    }
-                
-                }
-                else
-                {
-                    await _mediator.Send(new CreateItemCommand { Name = itemVm.Name });
-                }
                 return RedirectToAction("Index");
             }
             return View(itemVm);
@@ -77,28 +57,10 @@ namespace Task.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(WriteItemViewModel itemVm)
         {
-            BaseResponse response;
-
             if(ModelState.IsValid)
-            {
-                var imgPath = @$"Images\Items\{itemVm.Id}.jpg";
-                var fullPath = @$"wwwroot\{imgPath}";
-                if (System.IO.File.Exists(fullPath))
-                {
-                    System.IO.File.Delete(fullPath);
-                }
-                if (itemVm.Image != null)
-                {
-                    using (FileStream stream = System.IO.File.Create(fullPath))
-                    {
-                        await itemVm.Image.CopyToAsync(stream);
-                    }
-                    response = await _mediator.Send(new UpdateItemCommand { Id = itemVm.Id, Name = itemVm.Name, Image = imgPath });
-                }
-                else
-                {
-                    response = await _mediator.Send(new UpdateItemCommand { Id = itemVm.Id, Name = itemVm.Name });
-                }
+            {               
+                await _mediator.Send(new UpdateItemCommand { Id = itemVm.Id, Name = itemVm.Name, Image = itemVm.Image });
+
                 return RedirectToAction("Index");
             }
             return View(itemVm);
@@ -113,15 +75,7 @@ namespace Task.Web.Controllers
 
         public async Task<IActionResult> ConfirmDelete(int id)
         {
-            var imgPath = @$"Images\Items\{id}.jpg";
-            var fullPath = @$"wwwroot\{imgPath}";
-
             await _mediator.Send(new DeleteItemCommand { Id = id });
-            
-            if (System.IO.File.Exists(fullPath))
-            {
-                System.IO.File.Delete(fullPath);
-            }
             
             return RedirectToAction("Index");
         }

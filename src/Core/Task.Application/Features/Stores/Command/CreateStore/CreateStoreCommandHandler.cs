@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Task.Application.Contracts.Infrastructure;
 using Task.Application.Contracts.Persistence;
 using Task.Application.Exceptions;
 using Task.Application.Features.Stores.Query;
@@ -18,11 +19,13 @@ namespace Task.Application.Features.Stores.Command.CreateStore
     {
         private readonly IRepository<Store> _storeRepository;
         private readonly IMapper _mapper;
+        private readonly IImageService _imageService;
 
-        public CreateStoreCommandHandler(IRepository<Store> repository,IMapper mapper)
+        public CreateStoreCommandHandler(IRepository<Store> repository,IMapper mapper,IImageService imageService)
         {
             _storeRepository = repository;
             _mapper = mapper;
+            _imageService = imageService;
         }
         public async Task<BaseResponse<int>> Handle(CreateStoreCommand request, CancellationToken cancellationToken)
         {
@@ -34,10 +37,12 @@ namespace Task.Application.Features.Stores.Command.CreateStore
             var storeToCreate= _mapper.Map<Store>(request);
             await _storeRepository.AddAsync(storeToCreate);
 
-            if (storeToCreate.Image != null)
+            if (request.Image != null)
             {
-                storeToCreate.Image= @$"Images\Stores\{storeToCreate.Id}.jpg";
+                var imgPath = @$"Images\Stores\{storeToCreate.Id}.jpg";
+                storeToCreate.Image = imgPath;
                 await _storeRepository.UpdateAsync(storeToCreate);
+                await _imageService.SaveImageAsync(request.Image, imgPath);
             }
 
             response.Result=storeToCreate.Id;

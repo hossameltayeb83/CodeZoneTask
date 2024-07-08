@@ -1,16 +1,7 @@
-﻿using AutoMapper;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Task.Application.Contracts.Persistence;
-using static System.Net.Mime.MediaTypeNames;
-
-namespace Task.Application.Responses
+﻿namespace Task.Application.Responses
 {
-    public class PaginatedResponse<T> 
-    { 
+    public class PaginatedResponse<T>
+    {
         public IReadOnlyCollection<T> Items { get; }
         public int Page { get; }
         public int PageSize { get; }

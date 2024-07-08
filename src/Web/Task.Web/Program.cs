@@ -2,6 +2,7 @@ using Task.Web.Middlewares;
 using Task.Application;
 
 using Task.Persistence;
+using Task.Infrastructure;
 namespace Task.Web
 {
     public class Program
@@ -13,7 +14,8 @@ namespace Task.Web
             // Add services to the container.
             builder.Services.AddControllersWithViews();
             builder.Services.AddPersistanceService(builder.Configuration)
-                .AddApplicationService();
+                .AddApplicationService()
+                .AddInfrastructureService();
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

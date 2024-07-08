@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Task.Application.Features.Stores.Command.CreateStore;
 using Task.Application.Features.Stores.Command.DeleteStore;
@@ -38,24 +37,10 @@ namespace Task.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Add(WriteStoreViewModel storeVm)
         {
-            BaseResponse<int> response;
             if (ModelState.IsValid)
             {
-                if (storeVm.Image != null)
-                {
-                
-                    response = await _mediator.Send(new CreateStoreCommand {  Name = storeVm.Name, Image = "TBD" });
-                    var imgPath = @$"Images\Stores\{response.Result}.jpg";
-                    var fullPath = @$"wwwroot\{imgPath}";
-                    using (FileStream stream = System.IO.File.Create(fullPath))
-                    {
-                        await storeVm.Image.CopyToAsync(stream);
-                    }
-                }
-                else
-                {
-                    await _mediator.Send(new CreateStoreCommand {  Name = storeVm.Name });
-                }
+                await _mediator.Send(new CreateStoreCommand {  Name = storeVm.Name, Image = storeVm.Image });
+                    
                 return RedirectToAction("Index");
             }
             return View(storeVm);
@@ -71,28 +56,10 @@ namespace Task.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(WriteStoreViewModel storeVm)
         {
-            BaseResponse response;
-
             if(ModelState.IsValid)
             {
-                var imgPath = @$"Images\Stores\{storeVm.Id}.jpg";
-                var fullPath= @$"wwwroot\{imgPath}";
-                if (System.IO.File.Exists(fullPath))
-                {
-                    System.IO.File.Delete(fullPath);
-                }
-                if (storeVm.Image != null)
-                {
-                    using (FileStream stream = System.IO.File.Create(fullPath))
-                    {
-                        await storeVm.Image.CopyToAsync(stream);
-                    }
-                    response = await _mediator.Send(new UpdateStoreCommand { Id = storeVm.Id, Name = storeVm.Name,Image= imgPath});
-                }
-                else
-                {
-                    response = await _mediator.Send(new UpdateStoreCommand { Id = storeVm.Id, Name = storeVm.Name });
-                }
+                await _mediator.Send(new UpdateStoreCommand { Id = storeVm.Id, Name = storeVm.Name,Image= storeVm.Image});
+
                 return RedirectToAction("Index");
             }
             return View(storeVm);
@@ -107,16 +74,8 @@ namespace Task.Web.Controllers
       
         public async Task<IActionResult> ConfirmDelete(int id)
         {
-            var imgPath = @$"Images\Stores\{id}.jpg";
-            var fullPath = @$"wwwroot\{imgPath}";
-
             await _mediator.Send(new DeleteStoreCommand { Id = id });
 
-            if (System.IO.File.Exists(fullPath))
-            {
-                System.IO.File.Delete(fullPath);
-            }
-            
             return RedirectToAction("Index");
         }
     }
